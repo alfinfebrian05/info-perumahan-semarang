@@ -1,0 +1,227 @@
+.Button {
+	all: unset;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 1rem;
+	padding: 1.3rem 2rem;
+	font-size: clamp(1.5rem, 2vw + 0.5rem, 2rem);
+    text-align: center;
+    text-transform: uppercase;
+	line-height: 1;
+	font-weight: 500;
+	height: 35px;
+	user-select: none;
+
+	&:focus:not(:focus-visible) {
+		outline: 0;
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--violet-6);
+		outline-offset: 1px;
+	}
+
+	&:global(.amber) {
+		background-color: var(--amber-5);
+		color: var(--black-12);
+        font-weight: 900;
+		outline-color: var(--amber-6);
+        box-shadow: 2px 0px 20px rgba(0, 0, 0, 0.055);
+
+		&:hover {
+            box-shadow: 2px 0px 20px rgba(0, 0, 0, 0.281);
+		}
+
+		&:focus {
+			box-shadow: 0 0 0 2px black;
+		}
+	}
+
+	&:global(.green) {
+		background-color: var(--green-4);
+		color: var(--green-11);
+		outline-color: var(--green-7);
+		&:hover {
+			background-color: var(--green-5);
+		}
+	}
+}
+
+.ButtonSubmit {
+	all: unset;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 0.5rem;
+	padding: 0.3rem 1rem;
+	font-size: 0.95rem;
+    text-align: center;
+    text-transform: capitalize;
+	line-height: 1;
+	font-weight: 500;
+	height: 35px;
+	user-select: none;
+
+	&:focus:not(:focus-visible) {
+		outline: 0;
+	}
+
+	&:focus-visible {
+		outline: 2px solid var(--violet-6);
+		outline-offset: 1px;
+	}
+
+	&:global(.blue) {
+		background-color: var(--blue-3);
+        border: solid 0.1rem var(--blue-6);
+		color: var(--blue-11);
+        font-weight: 500;
+        outline: none;
+        outline-offset: none;
+        box-shadow: 2px 0px 20px rgba(0, 0, 0, 0.055);
+
+		&:hover {
+            box-shadow: 2px 0px 20px rgba(0, 0, 0, 0.281);
+		}
+
+		&:focus {
+			box-shadow: 0 0 0 2px black;
+		}
+	}
+
+	&:global(.green) {
+		background-color: var(--green-4);
+		color: var(--green-11);
+		outline-color: var(--green-7);
+		&:hover {
+			background-color: var(--green-5);
+		}
+	}
+}
+
+.Overlay {
+	background-color: var(--black-a9);
+	position: fixed;
+	inset: 0;
+	animation: overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.Content {
+	background-color: var(--gray-1);
+	border-radius: 6px;
+	box-shadow: var(--shadow-6);
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 90vw;
+	max-width: 500px;
+	padding: 25px;
+	animation: contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+	&:focus {
+		outline: none;
+	}
+}
+
+.Title {
+	margin: 0;
+	font-weight: 600;
+	color: var(--indigo-11);
+	font-size: 17px;
+    text-transform: capitalize;
+}
+
+.Description {
+	margin: 10px 0 20px;
+	color: var(--mauve-11);
+	font-size: 15px;
+	line-height: 1.5;
+    text-transform: capitalize;
+}
+
+.IconButton {
+	all: unset;
+	font-family: inherit;
+	border-radius: 100%;
+	height: 25px;
+	width: 25px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--indigo-11);
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	background-color: var(--gray-3);
+	&:hover {
+		background-color: var(--indigo-4);
+	}
+
+	&:focus {
+		box-shadow: 0 0 0 2px var(--indigo-7);
+	}
+}
+
+.Fieldset {
+	all: unset;
+	display: flex;
+	gap: 20px;
+	align-items: center;
+	margin-bottom: 15px;
+}
+
+.Label {
+	font-size: 15px;
+	color: var(--indigo-11);
+	width: 90px;
+	text-align: right;
+}
+
+.Separator {
+  border: none;             /* Remove default border */
+  height: 1px;              /* Line thickness */
+  background-color: var(--gray-6); /* Light gray line */
+  margin: 24px 0;           /* Space above and below */
+  width: 100%;              /* Full width of the form */
+  border-radius: 1px;       /* Slightly rounded edges for smooth look */
+}
+
+.Input {
+	all: unset;
+	width: 100%;
+	flex: 1;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 4px;
+	padding: 0 10px;
+	font-size: 15px;
+	line-height: 1;
+	color: var(--indigo-11);
+	box-shadow: 0 0 0 1px var(--indigo-7);
+	height: 35px;
+	&:focus {
+		box-shadow: 0 0 0 2px var(--indigo-8);
+	}
+}
+
+@keyframes overlayShow {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes contentShow {
+	from {
+		opacity: 0;
+		transform: translate(-50%, -48%) scale(0.96);
+	}
+	to {
+		opacity: 1;
+		transform: translate(-50%, -50%) scale(1);
+	}
+}
