@@ -15,6 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.infoperumahansemarang.com"),
+  
   title: {
     default: "Jual Beli Rumah Semarang | Info Perumahan Semarang",
     template: "%s | Info Perumahan Semarang",

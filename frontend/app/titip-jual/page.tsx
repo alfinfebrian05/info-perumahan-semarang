@@ -23,12 +23,6 @@ import {
 
 import { FaqAccordion } from "@/components/FaqAccordion";
 import { ButtonCTA } from "@/components/ButtonCTA";
-import { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "Titip Sewa dan Jual Properti Semarang",
-  description: "Titip jual rumah atau properti di Semarang dengan mudah dan aman melalui platform kami. Dapatkan pembeli potensial lebih cepat dengan layanan titip jual terpercaya di Semarang dan sekitarnya.",
-}
 
 export default function Page() {
   const autoplay = useRef(
