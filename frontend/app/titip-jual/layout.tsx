@@ -16,6 +16,9 @@ export const metadata: Metadata = {
       },
     ]
   },
+  alternates: {
+    canonical: "https://www.infoperumahansemarang.com/titip-jual",
+  }
 };
 
 export default function Layout({
