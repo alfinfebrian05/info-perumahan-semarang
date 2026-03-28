@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.infoperumahansemarang.com"),
-  
+
   title: {
     default: "Jual Beli Rumah Semarang | Info Perumahan Semarang",
     template: "%s | Info Perumahan Semarang",
@@ -63,7 +63,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/illustration/og-image.png",
+        url: "https://www.infoperumahansemarang.com/illustration/og-image.png",
         width: 1200,
         height: 630,
         alt: "Jual Rumah Semarang",
@@ -76,7 +76,7 @@ export const metadata: Metadata = {
     title: "Jual Rumah Semarang Cepat & Mudah",
     description:
       "Pasang iklan properti Anda dan temukan pembeli potensial di Semarang.",
-    images: ["illustration/og-image.png"],
+    images: ["/illustration/og-image.png"],
   },
 
   alternates: {
