@@ -15,12 +15,71 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Info Perumahan Semarang",
-  description: "Portal informasi perumahan di Semarang dan sekitarnya, menyediakan daftar properti terbaru dan terpercaya.",
+  title: {
+    default: "Jual Beli Rumah Semarang | Info Perumahan Semarang",
+    template: "%s | Info Perumahan Semarang",
+  },
+  
+  description: "Portal sewa jual beli rumah di Semarang dan sekitarnya dengan mudah. Temukan rumah terbaru, harga terbaik, dan layanan titip jual properti terpercaya di Semarang dan sekitarnya.",
+  
+  keywords: [
+    "jual rumah semarang",
+    "beli rumah semarang",
+    "perumahan semarang",
+    "agen properti semarang",
+    "titip jual rumah semarang",
+    "rumah murah semarang",
+  ],
+
+  authors: [{ name: "Info Perumahan Semarang" }],
+  creator: "Info Perumahan Semarang",
+  publisher: "Info Perumahan Semarang",
+
   icons: {
     icon: "/logo-info-perumahan-semarang.svg", // your favicon path
     apple: "/logo-info-perumahan-semarang.svg",
   },
+
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+
+  openGraph: {
+    title: "Jual Beli Rumah Semarang | Info Perumahan Semarang",
+    description:
+      "Platform terpercaya untuk sewa jual beli dan titip jual rumah di Semarang dan sekitarnya. Dapatkan pembeli potensial lebih cepat.",
+    url: "https://www.infoperumahansemarang.com",
+    siteName: "Info Perumahan Semarang",
+    locale: "id_ID",
+    type: "website",
+    images: [
+      {
+        url: "/illustration/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Jual Rumah Semarang",
+      },
+    ],
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "Jual Rumah Semarang Cepat & Mudah",
+    description:
+      "Pasang iklan properti Anda dan temukan pembeli potensial di Semarang.",
+    images: ["illustration/og-image.png"],
+  },
+
+  alternates: {
+    canonical: "https://www.infoperumahansemarang.com",
+  }
 };
 
 export default function RootLayout({
