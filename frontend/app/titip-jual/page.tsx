@@ -154,22 +154,22 @@ export default function Page() {
             flexDirection: "column",
           }}
         >
-          <Box style={{ backgroundColor: "var(--blue-3)" }} width="100%" p="2">
+          <Box style={{ backgroundColor: "var(--amber-3)" }} width="100%" py="5" px="4">
             <Flex
               align="center"
               justify={"center"}
               gap="5"
-              style={{ maxWidth: "64rem", margin: "0 auto" }}
+              style={{ maxWidth: "96rem", margin: "0 auto" }}
             >
               <Image
-                src="logo-info-perumahan-semarang.svg"
+                src="/logo-info-perumahan-semarang.png"
                 alt="Logo"
-                width={110}
-                height={110}
+                width={130}
+                height={130}
               />
               <Heading
                 size={{ md: "6", xl: "8" }}
-                style={{ color: "var(--blue-11)" }}
+                style={{ color: "var(--yellow-11)" }}
               >
                 Info Perumahan Properti Semarang
               </Heading>

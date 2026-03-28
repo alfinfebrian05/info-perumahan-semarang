@@ -38,8 +38,8 @@ export const metadata: Metadata = {
   publisher: "Info Perumahan Semarang",
 
   icons: {
-    icon: "/logo-info-perumahan-semarang.svg", // your favicon path
-    apple: "/logo-info-perumahan-semarang.svg",
+    icon: "favicon/info-perumahan-semarang.svg", // your favicon path
+    apple: "favicon/info-perumahan-semarang.svg",
   },
 
   robots: {
