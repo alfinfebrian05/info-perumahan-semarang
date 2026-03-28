@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     description: "Titip jual rumah atau properti di Semarang dengan mudah dan aman melalui platform kami. Dapatkan pembeli potensial lebih cepat dengan layanan titip jual terpercaya di Semarang dan sekitarnya.",
     images: [
       {
-        url: "https://www.infoperumahansemarang.com/og-titip-jual.jpg",
+        url: "https://www.infoperumahansemarang.com/illustration/og-image.png",
       },
     ]
   },
