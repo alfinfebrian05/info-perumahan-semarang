@@ -1,18 +1,14 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import { Theme } from "@radix-ui/themes";
-import { SpeedInsights } from "@vercel/speed-insights/next"
-import { Analytics } from "@vercel/analytics/next"
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -23,7 +19,8 @@ export const metadata: Metadata = {
     template: "%s | Info Perumahan Semarang",
   },
   
-  description: "Portal sewa jual beli rumah di Semarang dan sekitarnya dengan mudah. Temukan rumah terbaru, harga terbaik, dan layanan titip jual properti terpercaya di Semarang dan sekitarnya.",
+  description:
+    "Portal sewa jual beli rumah di Semarang dan sekitarnya dengan mudah. Temukan rumah terbaru, harga terbaik, dan layanan titip jual properti terpercaya di Semarang dan sekitarnya.",
   
   keywords: [
     "jual rumah semarang",
@@ -40,7 +37,7 @@ export const metadata: Metadata = {
   publisher: "Info Perumahan Semarang",
 
   icons: {
-    icon: "favicon/info-perumahan-semarang.svg", // your favicon path
+    icon: "favicon/info-perumahan-semarang.svg",
     apple: "favicon/info-perumahan-semarang.svg",
   },
 
@@ -83,21 +80,21 @@ export const metadata: Metadata = {
 
   alternates: {
     canonical: "https://www.infoperumahansemarang.com",
-  }
+  },
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html
       lang="id"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <Theme>
+        <Theme appearance="inherit">
           {children}
           <Analytics />
           <SpeedInsights />
