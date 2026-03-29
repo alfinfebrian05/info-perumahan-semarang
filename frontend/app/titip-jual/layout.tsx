@@ -3,13 +3,13 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.infoperumahansemarang.com"),
   title: {
-    default: " Beli, Jual, Sewa Rumah dan Properti Anda Semarang dan Sekitarnya",
+    default: " Beli, Titip Jual, Sewa Rumah dan Properti Anda Semarang dan Sekitarnya",
     template: "%s | Info Perumahan Semarang",
  },
- description: "Beli, jual, sewa rumah atau properti Anda di Semarang dan sekitarnya terpercaya, mudah dan aman melalui kami. Dapatkan pembeli potensial lebih cepat dengan layanan titip jual terpercaya di Semarang dan sekitarnya.",
+ description: "Beli, titip jual, sewa rumah atau properti Anda di Semarang dan sekitarnya terpercaya, mudah dan aman melalui kami. Dapatkan pembeli potensial lebih cepat dengan layanan titip jual terpercaya di Semarang dan sekitarnya.",
  openGraph: {
     title: "Beli, Titip Jual atau Sewa Rumah dan Properti Semarang dan Sekitarnya",
-    description: "Beli jual, sewa rumah atau properti Anda di Semarang dan sekitarnya terpercaya, mudah dan aman melalui kami. Dapatkan pembeli potensial lebih cepat dengan layanan titip jual terpercaya di Semarang dan sekitarnya.",
+    description: "Beli, titip jual, sewa rumah atau properti Anda di Semarang dan sekitarnya terpercaya, mudah dan aman melalui kami. Dapatkan pembeli potensial lebih cepat dengan layanan titip jual terpercaya di Semarang dan sekitarnya.",
     images: [
       {
         url: "https://www.infoperumahansemarang.com/illustration/og-image.png",
