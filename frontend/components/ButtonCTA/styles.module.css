@@ -5,7 +5,7 @@
 	justify-content: center;
 	border-radius: 1rem;
 	padding: 1.3rem 2rem;
-	font-size: clamp(1.5rem, 2vw + 0.5rem, 2rem);
+	font-size: clamp(1.25rem, 2vw + 0.5rem, 2rem);
     text-align: center;
     text-transform: uppercase;
 	line-height: 1;
@@ -30,11 +30,13 @@
         box-shadow: 2px 0px 20px rgba(0, 0, 0, 0.055);
 
 		&:hover {
+			border: solid 0.20rem var(--gray-12);
             box-shadow: 2px 0px 20px rgba(0, 0, 0, 0.281);
 		}
 
 		&:focus {
-			box-shadow: 0 0 0 2px black;
+			border: solid 0.20rem var(--gray-12);
+            box-shadow: 2px 0px 20px rgba(0, 0, 0, 0.281);
 		}
 	}
 

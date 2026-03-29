@@ -32,6 +32,7 @@ export const metadata: Metadata = {
     "agen properti semarang",
     "titip jual rumah semarang",
     "rumah murah semarang",
+    "jual beli sewa rumah semarang",
   ],
 
   authors: [{ name: "Info Perumahan Semarang" }],

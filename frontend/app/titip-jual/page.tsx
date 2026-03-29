@@ -19,6 +19,7 @@ import {
   HomeIcon,
   RocketIcon,
   CheckCircledIcon,
+  ChevronUpIcon,
 } from "@radix-ui/react-icons";
 
 import { FaqAccordion } from "@/components/FaqAccordion";
@@ -42,9 +43,18 @@ export default function Page() {
     [autoplay.current]
   );
 
-  const [selectedIndex, setSelectedIndex] = useState(0);
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+  
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
 
   // Remove activeStep state and observer useEffect
 
@@ -144,6 +154,16 @@ export default function Page() {
     };
   }, [emblaApi]);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 300);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+
   return (
     <Box style={{ minHeight: "100dvh", backgroundColor: "var(--blue-12)" }}>
         <Box
@@ -154,7 +174,7 @@ export default function Page() {
             flexDirection: "column",
           }}
         >
-          <Box style={{ backgroundColor: "var(--amber-3)" }} width="100%" py="5" px="4">
+          <Box style={{ backgroundColor: "var(--gray-1)", borderBottom: "2px solid var(--gray-4)", position: 'sticky', top: 0, zIndex: 10 }} width="100%" py="5" px="4">
             <Flex
               align="center"
               justify={"center"}
@@ -164,11 +184,11 @@ export default function Page() {
               <Image
                 src="/logo-info-perumahan-semarang.png"
                 alt="Logo"
-                width={130}
-                height={130}
+                width={100}
+                height={100}
               />
               <Heading
-                size={{ md: "6", xl: "8" }}
+                size={{ initial: "5", md: "6", xl: "8" }}
                 style={{ color: "var(--yellow-11)" }}
               >
                 Info Perumahan Properti Semarang
@@ -477,6 +497,34 @@ export default function Page() {
 
             <ButtonCTA />
           </Flex>
+        </Box>
+
+        <Box
+          style={{
+            position: "fixed",
+            bottom: "24px",
+            right: "24px",
+            zIndex: 999,
+            pointerEvents: showScrollTop ? "auto" : "none",
+            opacity: showScrollTop ? 1 : 0,
+            transform: showScrollTop
+              ? "translateY(0) scale(1)"
+              : "translateY(20px) scale(0.9)",
+            transition: "all 0.35s cubic-bezier(0.22, 1, 0.36, 1)",
+          }}
+        >
+          <IconButton
+            size="3"
+            radius="full"
+            onClick={scrollToTop}
+            style={{
+              backgroundColor: "var(--yellow-9)",
+              color: "black",
+              boxShadow: "0 8px 20px rgba(0,0,0,0.2)",
+            }}
+          >
+            <ChevronUpIcon width="18" height="18" />
+          </IconButton>
         </Box>
     </Box>
   );
