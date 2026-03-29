@@ -394,17 +394,15 @@ export default function Page() {
               </Flex>
             </Box>
 
-            <Box width={"100%"} maxWidth={"44rem"} px={{initial: "5", md:"9"}} mb={{initial: "0", sm: "5", md: "6"}}>
-              <Flex style={{textAlign: "start"}} direction={"column"} align={"start"} justify={"center"} gap={"3"} px={"6"}>
-                <Heading style={{ textTransform: "capitalize" }} size={{initial: "6", sm: "6", md: "7"}}>
+            <Box style={{textAlign: "center"}} width={"100%"} px={{initial: "2", md:"9"}} mb={{initial: "0", sm: "5", md: "6"}}>
+              <Flex direction={"column"} align={"center"} justify={"center"} gap={"3"}>
+                <Heading style={{ textTransform: "capitalize" }} size={{initial: "5", sm: "6", md: "7"}}>
                   mengapa harus di
                 </Heading>
                 
-                <Box>
-                  <Heading style={{ textTransform: "capitalize", color: "var(--blue-11)" }} size={{initial: "7", sm: "6", md: "7"}}>
-                    info perumahan properti semarang?
-                  </Heading>
-                </Box>
+                <Heading style={{ textTransform: "capitalize", color: "var(--blue-11)" }} size={{initial: "7", sm: "6", md: "7"}}>
+                  info perumahan properti semarang?
+                </Heading>
               </Flex>
             </Box>
 
