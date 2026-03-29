@@ -188,7 +188,7 @@ export default function Page() {
                 height={100}
               />
               <Heading
-                size={{ initial: "5", md: "6", xl: "8" }}
+                size={{ initial: "7", md: "6", xl: "8" }}
                 style={{ color: "var(--yellow-11)" }}
               >
                 Info Perumahan Properti Semarang
