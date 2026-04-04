@@ -83,7 +83,8 @@ export default function BuyerRequestForm() {
   };
 
   const onSubmit = (data: FormData) => {
-    const PHONE_NUMBER = "6285701660873";
+    const PHONE_NUMBER = "6281575735788";
+    
     const message = `*Inquiry Properti Baru*\n\n` +
       `*Profil:* ${data.name} (${data.phone})\n` +
       `*Budget:* ${data.budget}\n` +
