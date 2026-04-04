@@ -28,7 +28,7 @@ export default function FloatingActions() {
       >
         <a
           href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-            "Halo Veve, saya tertarik dengan layanan titip jual, sewa, beli properti. Saya ingin menjual properi saya, bisa dibantu?"
+            "Halo Veve, saya tertarik dengan layanan titip jual, sewa, beli properti.\nSaya ingin menjual properti saya, bisa dibantu?"
           )}`}
           target="_blank"
           rel="noopener noreferrer"
