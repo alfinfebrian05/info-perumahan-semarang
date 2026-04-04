@@ -1,9 +1,16 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { Nunito_Sans } from "next/font/google";
 import { Theme } from "@radix-ui/themes";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
+
+const nunito = Nunito_Sans({
+  variable: "--font-nunito-sans",
+  subsets: ["latin"],
+  display: "swap",
+});
 
 const inter = Inter({
   variable: "--font-inter",
@@ -91,7 +98,7 @@ export default function RootLayout({
   return (
     <html
       lang="id"
-      className={`${inter.variable} h-full antialiased`}
+      className={`${inter.variable} ${nunito.variable} w-full h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <Theme appearance="inherit">
