@@ -5,7 +5,7 @@ import { Box, Flex, Text, IconButton } from "@radix-ui/themes"
 import { ChevronUpIcon } from "@radix-ui/react-icons"
 import classnames from "classnames"
 
-const WHATSAPP_NUMBER = "628xxxxxxxxx"
+const WHATSAPP_NUMBER = "6281575735788"
 
 export default function FloatingActions() {
   const [showScrollTop, setShowScrollTop] = useState(false)
