@@ -101,7 +101,7 @@ export default function LandingLayout({ children }: { children: React.ReactNode 
         py="3" 
         px="4"
       >
-        <Flex align="center" justify="between" className="max-w-[1200px] mx-auto">
+        <Flex align="center" justify="between" className="max-w-300 mx-auto">
           <Link href="/" className="no-underline">
             <Flex align="center" gap="2" py={"2"}>
               <Image 
@@ -115,10 +115,31 @@ export default function LandingLayout({ children }: { children: React.ReactNode 
 
           <Flex gap="6" display={{ initial: 'none', md: 'flex' }} align="center">
             <Link href="/cari-properti" className="no-underline">
-              <Text size="2" weight="bold" className="text-gray-700 hover:text-indigo-600 transition-colors">Cari Properti</Text>
+              <span
+                className="
+                  font-inter text-sm lg:text-md text-(--slate-11) hover:text-(--indigo-11)
+                  font-normal hover:font-bold transition-colors cursor-pointer
+                  [&::after]:content-[attr(data-text)] [&::after]:font-bold 
+                  [&::after]:invisible [&::after]:block [&::after]:h-0 [&::after]:overflow-hidden
+                "
+                data-text="Cari Properti"
+              >
+                Cari Properti
+              </span>
             </Link>
+
             <Link href="/titip-jual" className="no-underline">
-              <Text size="2" weight="bold" className="text-gray-700 hover:text-indigo-600 transition-colors">Titip Jual</Text>
+              <span
+                className="
+                  font-inter text-sm lg:text-md text-(--slate-11) hover:text-(--indigo-11)
+                  font-normal hover:font-bold transition-colors cursor-pointer
+                  [&::after]:content-[attr(data-text)] [&::after]:font-bold 
+                  [&::after]:invisible [&::after]:block [&::after]:h-0 [&::after]:overflow-hidden
+                "
+                data-text="Titip Jual"
+              >
+                Titip Jual
+              </span>
             </Link>
           </Flex>
 
@@ -131,10 +152,10 @@ export default function LandingLayout({ children }: { children: React.ReactNode 
               </Dialog.Trigger>
               
               <Dialog.Portal>
-                <Dialog.Overlay className="RT-DialogOverlay fixed inset-0 z-[100] bg-black/40 backdrop-blur-[4px]" />
+                <Dialog.Overlay className="RT-DialogOverlay fixed inset-0 z-100 bg-black/40 backdrop-blur-xs" />
                 
                 <Dialog.Content 
-                  className="RT-DialogContent fixed top-0 right-0 bottom-0 z-[101] w-[80%] max-w-[320px] bg-white shadow-[-10px_0_30px_-10px_rgba(0,0,0,0.1)] flex flex-col focus:outline-none"
+                  className="RT-DialogContent fixed top-0 right-0 bottom-0 z-101 w-[80%] max-w-[320px] bg-white shadow-[-10px_0_30px_-10px_rgba(0,0,0,0.1)] flex flex-col focus:outline-none"
                 >
                   <Box className="p-5 border-b border-gray-100">
                     <Flex justify="between" align="center">
@@ -163,7 +184,7 @@ export default function LandingLayout({ children }: { children: React.ReactNode 
                             </Accordion.Trigger>
                           </Accordion.Header>
                           
-                          <Accordion.Content className="RT-AccordionContent bg-gray-50/50">
+                          <Accordion.Content className="font-nunito-sans bg-gray-50/50">
                             <Flex direction="column" className="px-5 pb-4 gap-1">
                               {group.links.map((link, lIdx) => (
                                 <Link 
@@ -172,7 +193,7 @@ export default function LandingLayout({ children }: { children: React.ReactNode 
                                   onClick={() => setOpen(false)}
                                   className="py-3 no-underline hover:pl-2 transition-all duration-300"
                                 >
-                                  <Text size="2" className="text-gray-600 hover:text-indigo-600">
+                                  <Text size="1" className="text-gray-600 hover:text-indigo-600">
                                     {link.label}
                                   </Text>
                                 </Link>
@@ -206,7 +227,7 @@ export default function LandingLayout({ children }: { children: React.ReactNode 
       <FloatingActions />
 
       <Box as="div" className="bg-gray-50 border-t border-gray-200" pt="8" pb="6" px="4">
-        <Flex direction={{ initial: "column", md: "row" }} gap="8" justify="between" className="max-w-[1200px] mx-auto">
+        <Flex direction={{ initial: "column", md: "row" }} gap="8" justify="between" className="max-w-300 mx-auto">
           <Box className="max-w-sm">
             <Flex align="center" gap="2" mb="4">
               <Image src="/logo-info-perumahan-semarang.png" alt="Logo" width={32} height={32} />
@@ -231,9 +252,9 @@ export default function LandingLayout({ children }: { children: React.ReactNode 
           </Flex>
         </Flex>
         
-        <Separator size="4" my="6" className="opacity-10 mx-auto max-w-[1200px]" />
+        <Separator size="4" my="6" className="opacity-10 mx-auto max-w-300" />
         
-        <Flex align="center" justify="center" className="max-w-[1200px] mx-auto">
+        <Flex align="center" justify="center" className="max-w-300 mx-auto">
            <Text size="1" color="gray">© {new Date().getFullYear()} Info Perumahan Properti Semarang.</Text>
         </Flex>
       </Box>
