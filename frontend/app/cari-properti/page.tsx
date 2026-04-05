@@ -1,9 +1,16 @@
 "use client"
 
 import React from 'react'
+import classnames from 'classnames'
+import Link from 'next/link'
+
 import {
-  Box, Card, Flex, Heading, Text, Grid
+  Box, Card, Flex, Heading, Text, Grid,
+  ChevronDownIcon,
+  Dialog,
+  Button
 } from '@radix-ui/themes'
+
 import { ArrowRightIcon } from '@radix-ui/react-icons'
 import { PiBuildingApartmentFill } from 'react-icons/pi'
 import { RiVerifiedBadgeFill } from 'react-icons/ri'
@@ -12,13 +19,17 @@ import { BsFillLayersFill } from 'react-icons/bs'
 import { AiFillShop } from 'react-icons/ai'
 import { BiSolidFactory } from 'react-icons/bi'
 import { GoClockFill, GoPasskeyFill } from 'react-icons/go'
-import { MdKingBed, MdMapsHomeWork, MdOutlineAddHomeWork } from 'react-icons/md'
-import classnames from 'classnames'
+import { MdKingBed, MdOutlineAddHomeWork } from 'react-icons/md'
 import { FaHandHolding } from 'react-icons/fa'
-import Link from 'next/link'
-import BuyerRequestForm from '@/components/BuyerFormRequest'
+import { TbBellRingingFilled, TbHomeCancel } from "react-icons/tb";
+import { TiCancel } from "react-icons/ti";
+
+import BuyerRequestForm, { BuyerRequestFormRef } from '@/components/BuyerFormRequest'
 
 export default function Page() {
+  const [open, setOpen] = React.useState(false)
+  const formRef = React.useRef<BuyerRequestFormRef>(null)
+
   const listings: any[] = []
 
   const buyPropertyCategories = [
@@ -277,7 +288,7 @@ export default function Page() {
                                             "flex items-center justify-center rounded-full border text-(--amber-11)",
                                             isFirst ? "bg-(--yellow-2) border-(--yellow-6)" : "bg-(--amber-2) border-(--amber-6)"
                                         )}
-                                    p="3"
+                                        p="3"
                                     >
                                         {item.icon}
                                     </Box>
@@ -290,23 +301,196 @@ export default function Page() {
                     </div>
                     )
                 })}
-            </Flex>
-        </Flex>
 
-        {listings.length === 0 ? (
-            <Box mt="3">
-                <BuyerRequestForm />
-            </Box>
-        ) : (
-            <>
-            <Heading size={{initial: '4', md: '5'}} className='max-w-48 lg:max-w-64 flex gap-5 items-center'>
-                <MdMapsHomeWork size={48} className='text-(--indigo-11)' /> Temukan lokasi hunian favorit
-            </Heading>
-            <Flex className="overflow-x-auto snap-x snap-mandatory gap-4 pb-3 [scrollbar-width:none] [ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-                {/* data listing nanti disini */}
             </Flex>
-            </>
-        )}
+
+            <Flex direction={"column"} gap={"3"}>
+                <Heading size={{initial: '5', md: '6'}}>
+                    Proyek Terverifikasi
+                </Heading>
+
+                <Text className='w-full max-w-xs'>
+                    Properti dengan detail info terbaru, akurat, dan diverifikasi berkala ke developer
+                </Text>
+            </Flex>
+
+            <Flex className="overflow-x-auto snap-x snap-mandatory gap-4 pb-3 [scrollbar-width:none] [ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                {listings.length < 1 ? (
+                    <Flex
+                        direction={{ initial: "column", md: "row" }}
+                        width="100%"
+                        maxWidth={{lg: "50rem"}}
+                        py={{ initial: "6", md: "6" }}
+                        px={{ initial: "6", sm: "7", lg: "6" }}
+                        align="center"
+                        justify="between"
+                        gap={{ initial: "5", md: "4" }}
+                        className="bg-(--slate-2) rounded-md border border-(--slate-6)"
+                    >
+                        <Flex direction={{ initial: "column", md: "row" }} align="center" gap="5">
+                            {/* Icon */}
+                            <Box className="flex items-center justify-center rounded-full bg-(--red-3)" p="3">
+                                <TbHomeCancel size={36} className="text-(--red-10)" />
+                            </Box>
+
+                            {/* Text */}
+                            <Flex direction="column" gap={{ initial: "2", md: "2" }} align={{ initial: "center", md: "start" }} width={"100%"} maxWidth={"21rem"}>
+                                <Heading size="4" color="red" className="capitalize">
+                                    Properti tidak ditemukan
+                                </Heading>
+
+                                <Text
+                                    size="2"
+                                    align={{ initial: "center", md: "left" }}
+                                    weight="light"
+                                    style={{ color: 'var(--slate-10)' }}
+                                    className="max-w-sm"
+                                >
+                                    Kami sedang mengumpulkan pilihan terbaik. Tinggalkan permintaan dan kami hubungi kamu.
+                                </Text>
+                            </Flex>
+                        </Flex>
+
+                        {/* Dialog trigger */}
+                        <Dialog.Root
+                            open={open}
+                            onOpenChange={(open) => {
+                                if(!open) formRef.current?.reset()
+                                setOpen(open)
+                            }}
+                        >
+                            <Dialog.Trigger>
+                                <Flex align="center" gap="2" className="cursor-pointer shrink-0 bg-(--indigo-9) hover:bg-(--indigo-10) text-(--white-a12) px-5 py-2.5 rounded-md transition-colors">
+                                    <Text size="2" weight="bold">Beritahu Saya</Text>
+                                    <TbBellRingingFilled size={16} />
+                                </Flex>
+                            </Dialog.Trigger>
+
+                            <Dialog.Content maxWidth="480px" className='text-center'>
+                                <Flex direction={"column"} gap={"1"} align={"center"} mt={"3"}>
+                                    <Dialog.Title>
+                                        Temukan Properti Impian Anda
+                                    </Dialog.Title>
+
+                                    <Dialog.Description
+                                        size="2"
+                                        mb="2"
+                                        style={{ color: 'var(--slate-10)' }}
+                                        className="max-w-2xs"
+                                    >
+                                        Isi kebutuhan Anda, dan dapatkan rekomendasi properti yang paling cocok.
+                                    </Dialog.Description>
+                                </Flex>
+
+                                <BuyerRequestForm ref={formRef} />
+
+                                <Flex justify="end" mt="4">
+                                    <Dialog.Close>
+                                        <Button color='red' variant='soft'>
+                                            Batal
+                                        </Button>
+                                    </Dialog.Close>
+                                </Flex>
+                            </Dialog.Content>
+                        </Dialog.Root>
+                    </Flex>
+                ) : (<></>)}
+            </Flex>
+
+            <Flex direction={"column"} gap={"3"}>
+                <Heading size={{initial: '5', md: '6'}}>
+                    Properti Terbaru
+                </Heading>
+
+                <Text className='w-full max-w-2xs'>
+                    Properti terbaru dipilih secara akurat dan harga pilihan terbaik
+                </Text>
+            </Flex>
+
+            <Flex className="overflow-x-auto snap-x snap-mandatory gap-4 pb-3 [scrollbar-width:none] [ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                {listings.length < 1 ? (
+                    <Flex
+                        direction={{ initial: "column", md: "row" }}
+                        width="100%"
+                        maxWidth={{lg: "50rem"}}
+                        py={{ initial: "6", md: "6" }}
+                        px={{ initial: "6", sm: "7", lg: "6" }}
+                        align="center"
+                        justify="between"
+                        gap={{ initial: "5", md: "4" }}
+                        className="bg-(--slate-2) rounded-md border border-(--slate-6)"
+                    >
+                        <Flex direction={{ initial: "column", md: "row" }} align="center" gap="5">
+                            {/* Icon */}
+                            <Box className="flex items-center justify-center rounded-full bg-(--red-3)" p="3">
+                                <TbHomeCancel size={36} className="text-(--red-10)" />
+                            </Box>
+
+                            {/* Text */}
+                            <Flex direction="column" gap={{ initial: "2", md: "2" }} align={{ initial: "center", md: "start" }} width={"100%"} maxWidth={"21rem"}>
+                                <Heading size="4" color="red" className="capitalize">
+                                    Properti tidak ditemukan
+                                </Heading>
+
+                                <Text
+                                    size="2"
+                                    align={{ initial: "center", md: "left" }}
+                                    weight="light"
+                                    style={{ color: 'var(--slate-10)' }}
+                                    className="max-w-sm"
+                                >
+                                    Kami sedang mengumpulkan pilihan terbaik. Tinggalkan permintaan dan kami hubungi kamu.
+                                </Text>
+                            </Flex>
+                        </Flex>
+
+                        {/* Dialog trigger */}
+                        <Dialog.Root
+                            open={open}
+                            onOpenChange={(open) => {
+                                if(!open) formRef.current?.reset()
+                                setOpen(open)
+                            }}
+                        >
+                            <Dialog.Trigger>
+                                <Flex align="center" gap="2" className="cursor-pointer shrink-0 bg-(--indigo-9) hover:bg-(--indigo-10) text-(--white-a12) px-5 py-2.5 rounded-md transition-colors">
+                                    <Text size="2" weight="bold">Beritahu Saya</Text>
+                                    <TbBellRingingFilled size={16} />
+                                </Flex>
+                            </Dialog.Trigger>
+
+                            <Dialog.Content maxWidth="480px" className='text-center'>
+                                <Flex direction={"column"} gap={"1"} align={"center"} mt={"3"}>
+                                    <Dialog.Title>
+                                        Temukan Properti Impian Anda
+                                    </Dialog.Title>
+
+                                    <Dialog.Description
+                                        size="2"
+                                        mb="2"
+                                        style={{ color: 'var(--slate-10)' }}
+                                        className="max-w-2xs"
+                                    >
+                                        Isi kebutuhan Anda, dan dapatkan rekomendasi properti yang paling cocok.
+                                    </Dialog.Description>
+                                </Flex>
+
+                                <BuyerRequestForm ref={formRef} />
+
+                                <Flex justify="end" mt="4">
+                                    <Dialog.Close>
+                                        <Button color='red' variant='soft'>
+                                            Batal
+                                        </Button>
+                                    </Dialog.Close>
+                                </Flex>
+                            </Dialog.Content>
+                        </Dialog.Root>
+                    </Flex>
+                ) : (<></>)}
+            </Flex>
+
+        </Flex>
       </Box>
 
     </React.Fragment>

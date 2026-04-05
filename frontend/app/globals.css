@@ -9,6 +9,14 @@
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
+@utility font-inter {
+  font-family: var(--font-inter), sans-serif;
+}
+
+@utility font-nunito-sans {
+  font-family: var(--font-nunito-sans), sans-serif;
+}
+
 /* 2. TAILWIND THEME CONFIG */
 @theme inline {
   --color-background: var(--background);
@@ -36,7 +44,7 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-inter), sans-serif !important;
+  font-family: var(--font-nunito-sans), sans-serif !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

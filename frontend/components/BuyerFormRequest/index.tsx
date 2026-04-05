@@ -1,41 +1,47 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useImperativeHandle, forwardRef } from "react"; // 1. add useImperativeHandle, forwardRef
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import {
-  Box,
-  Card,
-  Flex,
-  Heading,
-  Text,
-  TextField,
-  Select,
-  Checkbox,
-  Button,
-  Grid,
-  Tabs,
+  Box, Card, Flex, Heading, Text, TextField,
+  Select, Checkbox, Button, Grid, Tabs
 } from "@radix-ui/themes";
-import { HiOutlineChevronRight, HiOutlineChevronLeft, HiOutlinePaperAirplane } from "react-icons/hi";
-import { RiSendPlaneFill, RiWhatsappFill } from "react-icons/ri";
+import {
+  HiOutlineChevronRight,
+  HiOutlineChevronLeft
+} from "react-icons/hi";
+import { RiWhatsappFill } from "react-icons/ri";
+
+export interface BuyerRequestFormRef {
+  reset: () => void;
+}
 
 const formSchema = z.object({
-  name: z.string().min(2, "Nama wajib diisi"),
-  phone: z.string().min(10, "Nomor HP minimal 10 digit"),
+  name: z.string().min(2, "Nama minimal 2 karakter"),
+  age: z.string()
+    .min(1, "Usia wajib diisi")
+    .regex(/^\d+$/, "Usia harus berupa angka"),
+  jobType: z.string().min(1, "Pilih jenis pekerjaan"),
+  phone: z.string().min(10, "No HP minimal 10 digit"),
+  location: z.string().min(3, "Lokasi minimal 3 karakter"),
   budget: z.string().min(1, "Pilih budget"),
-  propertyType: z.string().min(1, "Pilih jenis properti"),
-  certificate: z.string().min(1, "Pilih sertifikat"),
-  certificate_other: z.string().optional(),
-  urgency: z.string().min(1, "Pilih urgensi"),
+  propertyType: z.string().min(1, "Pilih tipe properti"),
+  certificate: z.string().min(1, "Pilih legalitas"),
+  certificate_other: z.string(),
+  purpose: z.string().min(1, "Pilih tujuan pembelian"),
+  payment: z.string().min(1, "Pilih metode pembayaran"),
+  urgency: z.string().min(1, "Pilih timeline pembelian"),
   bedroom: z.string().optional(),
   bathroom: z.string().optional(),
   building: z.string().optional(),
   land: z.string().optional(),
-  carport: z.boolean().optional(),
-  carport_count: z.string().optional(),
   electricity: z.string().optional(),
   water: z.string().optional(),
+  carport: z.boolean().optional(),
+  carport_count: z.string().optional(),
+  notes: z.string().optional(),
   security: z.boolean().optional(),
   one_gate: z.boolean().optional(),
   masjid: z.boolean().optional(),
@@ -44,237 +50,428 @@ const formSchema = z.object({
 });
 
 type FormData = z.infer<typeof formSchema>;
-const TABS = ["buyer", "property", "detail", "environment"];
 
-export default function BuyerRequestForm() {
+const TABS = ["buyer", "property", "detail", "lingkungan"];
+
+const BuyerRequestForm = forwardRef<BuyerRequestFormRef>(function BuyerRequestForm(_, ref) {
   const [isClient, setIsClient] = useState(false);
   const [activeTab, setActiveTab] = useState("buyer");
+  const [unlockedTabs, setUnlockedTabs] = useState<string[]>(["buyer"]);
 
-  useEffect(() => { setIsClient(true); }, []);
 
-  const { register, handleSubmit, control, watch, trigger, formState: { errors } } = useForm<FormData>({
+  useEffect(() => setIsClient(true), []);
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    watch,
+    trigger,
+    reset,
+    formState: { errors },
+  } = useForm<FormData>({
     resolver: zodResolver(formSchema),
-    defaultValues: { 
-      water: "pdam", 
-      certificate: "shm (milik)", 
-      propertyType: "rumah tinggal",
-      electricity: "1300" 
-    }
+    defaultValues: {
+      water: "pdam",
+      electricity: "1300",
+    },
   });
 
+  useImperativeHandle(ref, () => ({
+    reset: () => {
+      reset();
+      setActiveTab("buyer");
+      setUnlockedTabs(["buyer"]);
+    },
+  }));
+
   const hasCarport = watch("carport");
-  const selectedCert = watch("certificate");
 
   const handleNext = async () => {
-    const fieldsByTab: Record<string, (keyof FormData)[]> = {
-      buyer: ["name", "phone", "budget"],
-      property: ["propertyType", "certificate"],
+    const fields: Record<string, (keyof FormData)[]> = {
+      buyer: ["name", "age", "jobType", "phone", "location"],
+      property: ["budget", "propertyType", "certificate", "purpose", "payment", "urgency"],
+      detail: [],
+      environment: [],
     };
-    const isValid = await trigger(fieldsByTab[activeTab] || []);
-    if (isValid) {
-      const currentIndex = TABS.indexOf(activeTab);
-      if (currentIndex < TABS.length - 1) setActiveTab(TABS[currentIndex + 1]);
+
+    const valid = await trigger(fields[activeTab] ?? []);
+    if (valid) {
+      const idx = TABS.indexOf(activeTab);
+      if (idx < TABS.length - 1) {
+        const nextTab = TABS[idx + 1];
+        setUnlockedTabs((prev) =>
+          prev.includes(nextTab) ? prev : [...prev, nextTab]
+        );
+        setActiveTab(nextTab);
+      }
     }
   };
 
   const handlePrev = () => {
-    const currentIndex = TABS.indexOf(activeTab);
-    if (currentIndex > 0) setActiveTab(TABS[currentIndex - 1]);
+    const idx = TABS.indexOf(activeTab);
+    if (idx > 0) setActiveTab(TABS[idx - 1]);
   };
 
   const onSubmit = (data: FormData) => {
-    const PHONE_NUMBER = "6281575735788";
-    
-    const message = `*Inquiry Properti Baru*\n\n` +
-      `*Profil:* ${data.name} (${data.phone})\n` +
-      `*Budget:* ${data.budget}\n` +
-      `*Tipe:* ${data.propertyType}\n` +
-      `*Spesifikasi:* KT ${data.bedroom || 0}/KM ${data.bathroom || 0}, Listrik ${data.electricity}VA, Air ${data.water}`;
-    window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(message)}`, "_blank");
+    const message = `*🔥 Inquiry Properti Baru*
+
+      👤 *Nama:* ${data.name}
+      📞 *HP:* ${data.phone}
+      📍 *Lokasi:* ${data.location}
+
+      🏠 *Properti:*
+      - Tipe: ${data.propertyType}
+      - Legalitas: ${data.certificate}${data.certificate === "lainnya" ? ` (${data.certificate_other})` : ""}
+      - Budget: ${data.budget}
+
+      🎯 *Rencana:*
+      - Tujuan: ${data.purpose}
+      - Pembayaran: ${data.payment}
+      - Timeline: ${data.urgency}
+
+      📐 *Spesifikasi:*
+      - Kamar Tidur: ${data.bedroom || "-"}
+      - Kamar Mandi: ${data.bathroom || "-"}
+      - Luas Bangunan: ${data.building ? `${data.building} m²` : "-"}
+      - Luas Tanah: ${data.land ? `${data.land} m²` : "-"}
+      - Listrik: ${data.electricity ? `${data.electricity} VA` : "-"}
+      - Air: ${data.water || "-"}
+      - Carport: ${data.carport ? `Ya (${data.carport_count || "1"} mobil)` : "Tidak"}
+
+      🏘️ *Fasilitas Lingkungan:*
+      - Keamanan 24 Jam: ${data.security ? "✅" : "❌"}
+      - One Gate System: ${data.one_gate ? "✅" : "❌"}
+      - Masjid: ${data.masjid ? "✅" : "❌"}
+      - Sekolah: ${data.sekolah ? "✅" : "❌"}
+      - Minimart: ${data.minimart ? "✅" : "❌"}
+
+      📝 *Catatan:* ${data.notes || "-"}
+    `;
+
+    window.open(
+      `https://wa.me/6281575735788?text=${encodeURIComponent(message)}`,
+      "_blank"
+    );
   };
 
   if (!isClient) return null;
 
-  return (
-    <Box className="w-full max-w-150 md:max-w-full mx-auto py-4 px-0">
-      <header className="mb-8 text-center md:text-start">
-        <Heading size={{md: "7"}} weight="bold" className="tracking-tight text-slate-900 pb-2">
-          Property Inquiry
-        </Heading>
-        <Text size="2" color="gray">
-          Detail kebutuhan Anda membantu kami memberikan rekomendasi terbaik.
-        </Text>
-      </header>
+  const FieldError = ({ message }: { message?: string }) => message
+    ? <Text size="1" color="red">{message}</Text>
+    : null;
 
-      <Card size="4" className="shadow-sm border-slate-200">
+  return (
+    <Box className="w-full overflow-hidden">
+      <Card size={{ initial: "2", sm: "4" }} className="overflow-hidden">
         <form onSubmit={handleSubmit(onSubmit)}>
           <Tabs.Root value={activeTab} onValueChange={setActiveTab}>
-            <Tabs.List color="indigo" className="justify-center border-b border-slate-100 mb-6">
-              {TABS.map((tab) => (
-                <Tabs.Trigger key={tab} value={tab} className="px-4 pb-3 text-[10px] sm:text-xs uppercase tracking-wider font-semibold">
-                  {tab === "buyer" ? "Profil" : tab === "property" ? "Kebutuhan" : tab === "detail" ? "Spesifikasi" : "Lingkungan"}
-                </Tabs.Trigger>
-              ))}
+            
+            <Tabs.List className="mb-6 w-full">
+              {TABS.map((tab) => {
+                const isUnlocked = unlockedTabs.includes(tab);
+                return (
+                  <Tabs.Trigger
+                    key={tab}
+                    value={tab}
+                    className="flex-1"
+                    disabled={!isUnlocked}
+                    onClick={(e) => {
+                      if (!isUnlocked) e.preventDefault();
+                    }}
+                  >
+                    <Text
+                      className="capitalize"
+                      weight={"medium"}
+                      size={"1"}
+                      style={{ opacity: isUnlocked ? 1 : 0.35 }}
+                    >
+                      {tab}
+                    </Text>
+                  </Tabs.Trigger>
+                );
+              })}
             </Tabs.List>
 
-            <Box className="min-h-85 py-2">
-              {/* TAB: BUYER */}
-              <Tabs.Content value="buyer">
-                <Flex direction="column" gap="4">
-                  <Grid columns={{ initial: "1", sm: "2" }} gap="4">
-                    <Flex direction={"column"} gap={"3"}>
-                      <Heading size="2" weight="medium" className="mb-1.5">Nama Lengkap</Heading>
-                      <TextField.Root placeholder="John Doe" {...register("name")} variant="surface" autoComplete="off" />
+            <Flex align={"start"} direction={"column"} gap={"4"}>
+              <Text size="1" className="text-center text-slate-500">
+                Step {TABS.indexOf(activeTab) + 1} dari {TABS.length}
+              </Text>
 
-                      {errors.name && <Text color="red" size="1" className="mt-1">{errors.name.message}</Text>}
-                    </Flex>
-                    
-                    <Flex direction={"column"} gap={"3"}>
-                      <Heading size="2" weight="medium" className="mb-1.5">Nomor Telepon</Heading>
-                      <TextField.Root placeholder="0812..." {...register("phone")} variant="surface" />
-                    </Flex>
+              <Tabs.Content value="buyer" className="w-full">
+                <Grid columns={{ sm: "2" }} gap="4">
+                  <Flex direction="column" gap="1">
+                    <TextField.Root placeholder="Nama" {...register("name")} />
+                    <FieldError message={errors.name?.message} />
+                  </Flex>
 
-                    <Flex direction={"column"} gap={"3"}>
-                      <Heading size="2" weight="medium" className="mb-1.5">Alokasi Budget</Heading>
+                  <Flex direction="column" gap="1">
+                    <TextField.Root placeholder="No HP" {...register("phone")} />
+                    <FieldError message={errors.phone?.message} />
+                  </Flex>
 
-                      <Controller name="budget" control={control} render={({ field }) => (
-                        <Select.Root onValueChange={field.onChange}>
-                          <Select.Trigger placeholder="Pilih rentang harga" value={field.value} />
-                          
-                          <Select.Content side="top" sideOffset={5}>
-                            {["Rp 100jt - 500jt", "Rp 500jt - 1M", "Rp 1M - 5M", "> Rp 5M"].map(b => (
-                              <Select.Item key={b} value={b} className="w-full max-w-full">
-                                {b}
-                              </Select.Item>
+                  <Flex direction="column" gap="1">
+                    <TextField.Root placeholder="Usia" type="number" {...register("age")} />
+                    <FieldError message={errors.age?.message} />
+                  </Flex>
+
+                  <Flex direction="column" gap="1">
+                    <Controller
+                      name="jobType"
+                      control={control}
+                      render={({ field }) => (
+                        <Select.Root value={field.value} onValueChange={field.onChange}>
+                          <Select.Trigger placeholder="Pilih pekerjaan" className="w-full" />
+                          <Select.Content>
+                            {["Karyawan Swasta","PNS / ASN","TNI / Polri","Wirausaha / Pengusaha","Profesional (Dokter, Pengacara, dll)","Freelancer","Ibu Rumah Tangga","Mahasiswa / Pelajar","Pensiunan","Lainnya"].map((item) => (
+                              <Select.Item key={item} value={item}>{item}</Select.Item>
                             ))}
                           </Select.Content>
                         </Select.Root>
-                      )} />
-                    </Flex>
-                  </Grid>
-                </Flex>
-              </Tabs.Content>
+                      )}
+                    />
+                    <FieldError message={errors.jobType?.message} />
+                  </Flex>
 
-              {/* TAB: PROPERTY */}
-              <Tabs.Content value="property">
-                <Flex direction="column" gap="4">
-                  <Grid columns={{ initial: "1", sm: "2" }} gap="4">
-                    <Flex direction={"column"} gap={"3"}>
-                      <Heading size="2" weight="medium" className="mb-1.5">Tipe Properti</Heading>
-                      <Controller name="propertyType" control={control} render={({ field }) => (
-                        <Select.Root value={field.value} onValueChange={field.onChange}>
-                          <Select.Trigger className="w-full" />
-                          <Select.Content>
-                            {["Rumah Tinggal", "Apartemen/Condo", "Tanah Kavling", "Ruko/Komersial"].map(p => <Select.Item key={p} value={p.toLowerCase()}>{p}</Select.Item>)}
-                          </Select.Content>
-                        </Select.Root>
-                      )} />
-                    </Flex>
-                    <Flex direction={"column"} gap={"3"}>
-                      <Heading size="2" weight="medium" className="mb-1.5">Legalitas</Heading>
-                      <Controller name="certificate" control={control} render={({ field }) => (
-                        <Select.Root value={field.value} onValueChange={field.onChange}>
-                          <Select.Trigger className="w-full" />
-                          <Select.Content>
-                            {["SHM (Milik)", "HGB", "Lainnya"].map(c => <Select.Item key={c} value={c.toLowerCase()}>{c}</Select.Item>)}
-                          </Select.Content>
-                        </Select.Root>
-                      )} />
-                    </Flex>
-                  </Grid>
-                </Flex>
-              </Tabs.Content>
-
-              {/* TAB: DETAIL */}
-              <Tabs.Content value="detail">
-                <Grid columns={{md: "2"}} gap="4" className="mb-6">
-                  <Flex direction={"column"} gap={"3"}>
-                    <Heading as="h6" size="2" weight="medium" className="mb-1 capitalize">Jml K. Tidur</Heading>
-                    <TextField.Root placeholder="KT" {...register("bedroom")} className="w-full" />
-                  </Flex>
-                  <Flex direction={"column"} gap={"3"}>
-                    <Heading as="h6" size="2" weight="medium" className="mb-1 capitalize">Jml K. Mandi</Heading>
-                    <TextField.Root placeholder="KM" {...register("bathroom")} className="w-full" />
-                  </Flex>
-                  <Flex direction={"column"} gap={"3"}>
-                    <Heading as="h6" size="2" weight="medium" className="mb-1 capitalize">Luas Bangunan</Heading>
-                    <TextField.Root placeholder="Contoh: 1300" {...register("building")} />
-                  </Flex>
-                  <Flex direction={"column"} gap={"3"}>
-                    <Heading as="h6" size="2" weight="medium" className="mb-1 capitalize">Luas Tanah</Heading>
-                    <TextField.Root placeholder="Contoh: 1300" {...register("land")} />
-                  </Flex>
-                  <Flex direction={"column"} gap={"3"}>
-                    <Heading as="h6" size="2" weight="medium" className="mb-1 capitalize">Daya Listrik (VA)</Heading>
-                    <TextField.Root placeholder="Contoh: 1300" {...register("electricity")} />
-                  </Flex>
-                  <Flex direction={"column"} gap={"3"}>
-                    <Heading size="2" weight="medium" className="mb-1 capitalize">Sumber Air</Heading>
-
-                    <Controller name="water" control={control} render={({ field }) => (
-                      <Select.Root value={field.value} onValueChange={field.onChange}>
-                        <Select.Trigger className="w-full" />
-                        <Select.Content>
-                          <Select.Item value="pdam">PDAM</Select.Item>
-                          <Select.Item value="sumur">Sumur Bor / Artesis</Select.Item>
-                        </Select.Content>
-                      </Select.Root>
-                    )} />
+                  <Flex direction="column" gap="1">
+                    <TextField.Root placeholder="Lokasi (Semarang, dll)" {...register("location")} />
+                    <FieldError message={errors.location?.message} />
                   </Flex>
                 </Grid>
-                <Flex direction="column" gap="3">
-                  <Heading size="2" weight={"medium"} className="flex items-center gap-2">
-                    <Checkbox {...register("carport")} /> Tersedia Carport
-                  </Heading>
-                  {hasCarport && <TextField.Root placeholder="Kapasitas Kendaraan (Mobil)" size="2" {...register("carport_count")} className="ml-6" />}
-                </Flex>
               </Tabs.Content>
 
-              {/* TAB: ENVIRONMENT */}
-              <Tabs.Content value="environment">
-                <Flex direction={"column"} gap={"4"}>
-                  <Heading size="2" weight="medium">Fasilitas & Lingkungan:</Heading>
+              <Tabs.Content value="property" className="w-full">
+                <Flex width={"100%"} direction="column" gap="4">
+                  <Grid columns={{ initial: "1", sm: "2" }} gap="4">
 
-                  <Grid columns={{md: "2"}} gapX="4" gapY="4">
-                    {[
-                      { id: "security", label: "Security 24 Jam" },
-                      { id: "one_gate", label: "One Gate System" },
-                      { id: "masjid", label: "Dekat Rumah Ibadah" },
-                      { id: "sekolah", label: "Area Pendidikan" },
-                      { id: "minimart", label: "Minimarket / Pasar" },
-                    ].map((item) => (
-                      <Text key={item.id} as="label" size="2" className="flex items-center gap-2 text-slate-600 cursor-pointer">
-                        <Checkbox {...register(item.id as any)} /> {item.label}
-                      </Text>
-                    ))}
+                    <Flex direction={"column"} gap={"1"}>
+                      <Heading size="2" weight="medium">Budget</Heading>
+                      <Controller
+                        name="budget"
+                        control={control}
+                        render={({ field }) => (
+                          <Select.Root value={field.value} onValueChange={field.onChange}>
+                            <Select.Trigger placeholder="Pilih budget" className="w-full" />
+                            <Select.Content>
+                              {["< 200 Juta","200 - 500 Juta","500 Juta - 1 Miliar","1 - 2 Miliar","2 - 5 Miliar","> 5 Miliar"].map((item) => (
+                                <Select.Item key={item} value={item}>{item}</Select.Item>
+                              ))}
+                            </Select.Content>
+                          </Select.Root>
+                        )}
+                      />
+                      <FieldError message={errors.budget?.message} />
+                    </Flex>
+
+                    <Flex direction={"column"} gap={"1"}>
+                      <Heading size="2" weight="medium">Tipe Properti</Heading>
+                      <Controller
+                        name="propertyType"
+                        control={control}
+                        render={({ field }) => (
+                          <Select.Root value={field.value} onValueChange={field.onChange}>
+                            <Select.Trigger placeholder="Pilih tipe properti" className="w-full" />
+                            <Select.Content>
+                              {["Rumah Tinggal","Rumah Cluster","Rumah Subsidi","Apartemen / Condo","Tanah Kavling","Tanah Komersial","Ruko","Rukan","Gudang","Kantor","Villa","Kos / Guest House"].map((item) => (
+                                <Select.Item key={item.toLowerCase()} value={item}>{item}</Select.Item>
+                              ))}
+                            </Select.Content>
+                          </Select.Root>
+                        )}
+                      />
+                      <FieldError message={errors.propertyType?.message} />
+                    </Flex>
+
+                    <Flex direction={"column"} gap={"1"}>
+                      <Heading size="2" weight="medium">Legalitas</Heading>
+                      <Controller
+                        name="certificate"
+                        control={control}
+                        render={({ field }) => (
+                          <Select.Root value={field.value} onValueChange={field.onChange}>
+                            <Select.Trigger placeholder="Pilih legalitas" className="w-full" />
+                            <Select.Content>
+                              {["SHM (Milik)","SHGB","Girik","AJB","Letter C","Strata Title","Lainnya"].map((item) => (
+                                <Select.Item key={item} value={item.toLowerCase()}>{item}</Select.Item>
+                              ))}
+                            </Select.Content>
+                          </Select.Root>
+                        )}
+                      />
+                      <FieldError message={errors.certificate?.message} />
+                    </Flex>
+
+                    <Flex direction={"column"} gap={"1"}>
+                      <Heading size="2" weight="medium">Tujuan Pembelian</Heading>
+                      <Controller
+                        name="purpose"
+                        control={control}
+                        render={({ field }) => (
+                          <Select.Root value={field.value} onValueChange={field.onChange}>
+                            <Select.Trigger placeholder="Pilih tujuan" className="w-full" />
+                            <Select.Content>
+                              {["Hunian Pribadi","Investasi","Disewakan","Usaha / Komersial"].map((item) => (
+                                <Select.Item key={item} value={item}>{item}</Select.Item>
+                              ))}
+                            </Select.Content>
+                          </Select.Root>
+                        )}
+                      />
+                      <FieldError message={errors.purpose?.message} />
+                    </Flex>
+
+                    <Flex direction={"column"} gap={"1"}>
+                      <Heading size="2" weight="medium">Metode Pembayaran</Heading>
+                      <Controller
+                        name="payment"
+                        control={control}
+                        render={({ field }) => (
+                          <Select.Root value={field.value} onValueChange={field.onChange}>
+                            <Select.Trigger placeholder="Pilih metode" className="w-full" />
+                            <Select.Content>
+                              {["Cash Keras","KPR Bank","KPR Subsidi (FLPP)","Cash Bertahap"].map((item) => (
+                                <Select.Item key={item} value={item}>{item}</Select.Item>
+                              ))}
+                            </Select.Content>
+                          </Select.Root>
+                        )}
+                      />
+                      <FieldError message={errors.payment?.message} />
+                    </Flex>
+
+                    <Flex direction={"column"} gap={"1"}>
+                      <Heading size="2" weight="medium">Timeline Pembelian</Heading>
+                      <Controller
+                        name="urgency"
+                        control={control}
+                        render={({ field }) => (
+                          <Select.Root value={field.value} onValueChange={field.onChange}>
+                            <Select.Trigger placeholder="Pilih timeline" className="w-full" />
+                            <Select.Content>
+                              {["Segera (< 1 bulan)","1 - 3 Bulan","3 - 6 Bulan","6 - 12 Bulan","Lebih dari 1 Tahun"].map((item) => (
+                                <Select.Item key={item} value={item}>{item}</Select.Item>
+                              ))}
+                            </Select.Content>
+                          </Select.Root>
+                        )}
+                      />
+                      <FieldError message={errors.urgency?.message} />
+                    </Flex>
+
                   </Grid>
+
+                  {watch("certificate") === "lainnya" && (
+                    <Flex direction="column" gap="1">
+                      <TextField.Root placeholder="Tulis jenis legalitas..." {...register("certificate_other")} />
+                      <FieldError message={errors.certificate_other?.message} />
+                    </Flex>
+                  )}
                 </Flex>
               </Tabs.Content>
-            </Box>
 
-            {/* ACTION FOOTER */}
-            <Flex justify="between" align={"center"} className="mt-10 pt-6 border-t border-slate-100">
-              <Button 
-                type="button" variant="ghost" color="gray" 
+              <Tabs.Content value="detail" className="w-full">
+                <Grid columns={{ sm: "2" }} gap="4">
+                  <TextField.Root placeholder="Kamar Tidur" {...register("bedroom")} />
+                  <TextField.Root placeholder="Kamar Mandi" {...register("bathroom")} />
+                  <TextField.Root placeholder="Luas Bangunan (m²)" {...register("building")} />
+                  <TextField.Root placeholder="Luas Tanah (m²)" {...register("land")} />
+
+                  {/* LISTRIK */}
+                  <Flex direction={"column"} gap={"3"}>
+                    <Heading size="2" weight="medium">Daya Listrik (VA)</Heading>
+                    <Controller
+                      name="electricity"
+                      control={control}
+                      render={({ field }) => (
+                        <Select.Root value={field.value} onValueChange={field.onChange}>
+                          <Select.Trigger placeholder="Pilih daya listrik" className="w-full" />
+                          <Select.Content>
+                            {["900","1300","2200","3500","4400","5500","6600"].map((item) => (
+                              <Select.Item key={item} value={item}>{item} VA</Select.Item>
+                            ))}
+                          </Select.Content>
+                        </Select.Root>
+                      )}
+                    />
+                  </Flex>
+
+                  {/* AIR */}
+                  <Flex direction={"column"} gap={"3"}>
+                    <Heading size="2" weight="medium">Sumber Air</Heading>
+                    <Controller
+                      name="water"
+                      control={control}
+                      render={({ field }) => (
+                        <Select.Root value={field.value} onValueChange={field.onChange}>
+                          <Select.Trigger placeholder="Pilih sumber air" className="w-full" />
+                          <Select.Content>
+                            {["PDAM","Sumur","Sumur Bor","PAM"].map((item) => (
+                              <Select.Item key={item} value={item.toLowerCase()}>{item}</Select.Item>
+                            ))}
+                          </Select.Content>
+                        </Select.Root>
+                      )}
+                    />
+                  </Flex>
+
+                </Grid>
+
+                <Flex mt="4" gap="3" width={"100%"} justify={"between"}>
+                  <label className="flex gap-2 items-center">
+                    <Controller
+                      name="carport"
+                      control={control}
+                      render={({ field }) => (
+                        <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                      )}
+                    />
+                    Carport
+                  </label>
+                  {hasCarport && (
+                    <TextField.Root placeholder="Jumlah Mobil" {...register("carport_count")} />
+                  )}
+                </Flex>
+              </Tabs.Content>
+
+              <Tabs.Content value="environment">
+                <Flex direction="column" gap="3">
+                  {["security_24_jam","one_gate","gereja","masjid","sekolah","supermarket","minimart"].map((f) => (
+                    <label key={f} className="flex items-center gap-3 capitalize">
+                      <Checkbox {...register(f as any)} /> {f.replace(/_/g, " ")}
+                    </label>
+                  ))}
+                  <TextField.Root placeholder="Catatan tambahan..." {...register("notes")} />
+                </Flex>
+              </Tabs.Content>
+            </Flex>
+
+            <Flex justify="between" mt="6">
+              <Button
+                type="button"
                 onClick={handlePrev}
-                className={`${activeTab === "buyer" ? "invisible" : "visible"} cursor-pointer`}
+                variant="ghost"
+                className={activeTab === "buyer" ? "invisible" : ""}
               >
-                <HiOutlineChevronLeft size={18} /> Kembali
+                <HiOutlineChevronLeft /> Back
               </Button>
 
               {activeTab !== "environment" ? (
-                <Button type="button" onClick={handleNext} className="cursor-pointer px-6 bg-slate-900">
-                  Lanjut <HiOutlineChevronRight size={18} />
+                <Button type="button" onClick={handleNext}>
+                  Next <HiOutlineChevronRight />
                 </Button>
               ) : (
-                <Button type="submit" color="green" variant="surface">
-                  Hubungi Kami <RiWhatsappFill size={18} />
+                <Button type="submit" color="green">
+                  Cari Properti <RiWhatsappFill />
                 </Button>
               )}
             </Flex>
+
           </Tabs.Root>
         </form>
       </Card>
     </Box>
   );
-}
+});
+
+BuyerRequestForm.displayName = "BuyerRequestForm";
+export default BuyerRequestForm;
