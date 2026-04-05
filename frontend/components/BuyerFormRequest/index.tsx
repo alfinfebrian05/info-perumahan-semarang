@@ -18,7 +18,7 @@ import {
   Tabs,
 } from "@radix-ui/themes";
 import { HiOutlineChevronRight, HiOutlineChevronLeft, HiOutlinePaperAirplane } from "react-icons/hi";
-import { RiSendPlaneFill } from "react-icons/ri";
+import { RiSendPlaneFill, RiWhatsappFill } from "react-icons/ri";
 
 const formSchema = z.object({
   name: z.string().min(2, "Nama wajib diisi"),
@@ -122,29 +122,36 @@ export default function BuyerRequestForm() {
               <Tabs.Content value="buyer">
                 <Flex direction="column" gap="4">
                   <Grid columns={{ initial: "1", sm: "2" }} gap="4">
-                    <Box>
-                      <Text as="div" size="2" weight="medium" className="mb-1.5 text-slate-700">Nama Lengkap</Text>
+                    <Flex direction={"column"} gap={"3"}>
+                      <Heading size="2" weight="medium" className="mb-1.5">Nama Lengkap</Heading>
                       <TextField.Root placeholder="John Doe" {...register("name")} variant="surface" autoComplete="off" />
+
                       {errors.name && <Text color="red" size="1" className="mt-1">{errors.name.message}</Text>}
-                    </Box>
-                    <Box>
-                      <Text as="div" size="2" weight="medium" className="mb-1.5 text-slate-700">Nomor Telepon</Text>
+                    </Flex>
+                    
+                    <Flex direction={"column"} gap={"3"}>
+                      <Heading size="2" weight="medium" className="mb-1.5">Nomor Telepon</Heading>
                       <TextField.Root placeholder="0812..." {...register("phone")} variant="surface" />
-                    </Box>
+                    </Flex>
+
+                    <Flex direction={"column"} gap={"3"}>
+                      <Heading size="2" weight="medium" className="mb-1.5">Alokasi Budget</Heading>
+
+                      <Controller name="budget" control={control} render={({ field }) => (
+                        <Select.Root onValueChange={field.onChange}>
+                          <Select.Trigger placeholder="Pilih rentang harga" value={field.value} />
+                          
+                          <Select.Content side="top" sideOffset={5}>
+                            {["Rp 100jt - 500jt", "Rp 500jt - 1M", "Rp 1M - 5M", "> Rp 5M"].map(b => (
+                              <Select.Item key={b} value={b} className="w-full max-w-full">
+                                {b}
+                              </Select.Item>
+                            ))}
+                          </Select.Content>
+                        </Select.Root>
+                      )} />
+                    </Flex>
                   </Grid>
-                  <Box>
-                    <Text as="div" size="2" weight="medium" className="mb-1.5 text-slate-700">Alokasi Budget</Text>
-                    <Controller name="budget" control={control} render={({ field }) => (
-                      <Select.Root value={field.value} onValueChange={field.onChange}>
-                        <Select.Trigger placeholder="Pilih rentang harga" className="w-full" />
-                        <Select.Content>
-                          {["Rp 100jt - 500jt", "Rp 500jt - 1M", "Rp 1M - 5M", "> Rp 5M"].map(b => (
-                            <Select.Item key={b} value={b}>{b}</Select.Item>
-                          ))}
-                        </Select.Content>
-                      </Select.Root>
-                    )} />
-                  </Box>
                 </Flex>
               </Tabs.Content>
 
@@ -152,8 +159,8 @@ export default function BuyerRequestForm() {
               <Tabs.Content value="property">
                 <Flex direction="column" gap="4">
                   <Grid columns={{ initial: "1", sm: "2" }} gap="4">
-                    <Box>
-                      <Text as="div" size="2" weight="medium" className="mb-1.5 text-slate-700">Tipe Properti</Text>
+                    <Flex direction={"column"} gap={"3"}>
+                      <Heading size="2" weight="medium" className="mb-1.5">Tipe Properti</Heading>
                       <Controller name="propertyType" control={control} render={({ field }) => (
                         <Select.Root value={field.value} onValueChange={field.onChange}>
                           <Select.Trigger className="w-full" />
@@ -162,9 +169,9 @@ export default function BuyerRequestForm() {
                           </Select.Content>
                         </Select.Root>
                       )} />
-                    </Box>
-                    <Box>
-                      <Text as="div" size="2" weight="medium" className="mb-1.5 text-slate-700">Legalitas</Text>
+                    </Flex>
+                    <Flex direction={"column"} gap={"3"}>
+                      <Heading size="2" weight="medium" className="mb-1.5">Legalitas</Heading>
                       <Controller name="certificate" control={control} render={({ field }) => (
                         <Select.Root value={field.value} onValueChange={field.onChange}>
                           <Select.Trigger className="w-full" />
@@ -173,7 +180,7 @@ export default function BuyerRequestForm() {
                           </Select.Content>
                         </Select.Root>
                       )} />
-                    </Box>
+                    </Flex>
                   </Grid>
                 </Flex>
               </Tabs.Content>
@@ -181,26 +188,29 @@ export default function BuyerRequestForm() {
               {/* TAB: DETAIL */}
               <Tabs.Content value="detail">
                 <Grid columns={{md: "2"}} gap="4" className="mb-6">
-                  <Box>
-                    <Text as="div" size="1" weight="medium" className="mb-1 uppercase text-slate-500">K. Tidur / K. Mandi</Text>
-                    <Flex gap="2">
-                       <TextField.Root placeholder="KT" {...register("bedroom")} className="w-full" />
-                       <TextField.Root placeholder="KM" {...register("bathroom")} className="w-full" />
-                    </Flex>
-                  </Box>
-                  <Box>
-                    <Text as="div" size="1" weight="medium" className="mb-1 uppercase text-slate-500">Daya Listrik (VA)</Text>
+                  <Flex direction={"column"} gap={"3"}>
+                    <Heading as="h6" size="2" weight="medium" className="mb-1 capitalize">Jml K. Tidur</Heading>
+                    <TextField.Root placeholder="KT" {...register("bedroom")} className="w-full" />
+                  </Flex>
+                  <Flex direction={"column"} gap={"3"}>
+                    <Heading as="h6" size="2" weight="medium" className="mb-1 capitalize">Jml K. Mandi</Heading>
+                    <TextField.Root placeholder="KM" {...register("bathroom")} className="w-full" />
+                  </Flex>
+                  <Flex direction={"column"} gap={"3"}>
+                    <Heading as="h6" size="2" weight="medium" className="mb-1 capitalize">Luas Bangunan</Heading>
+                    <TextField.Root placeholder="Contoh: 1300" {...register("building")} />
+                  </Flex>
+                  <Flex direction={"column"} gap={"3"}>
+                    <Heading as="h6" size="2" weight="medium" className="mb-1 capitalize">Luas Tanah</Heading>
+                    <TextField.Root placeholder="Contoh: 1300" {...register("land")} />
+                  </Flex>
+                  <Flex direction={"column"} gap={"3"}>
+                    <Heading as="h6" size="2" weight="medium" className="mb-1 capitalize">Daya Listrik (VA)</Heading>
                     <TextField.Root placeholder="Contoh: 1300" {...register("electricity")} />
-                  </Box>
-                  <Box>
-                    <Text as="div" size="1" weight="medium" className="mb-1 uppercase text-slate-500">Luas Bangunan / Tanah (m²)</Text>
-                    <Flex gap="2">
-                       <TextField.Root placeholder="LB" {...register("building")} className="w-full" />
-                       <TextField.Root placeholder="LT" {...register("land")} className="w-full" />
-                    </Flex>
-                  </Box>
-                  <Box>
-                    <Text as="div" size="1" weight="medium" className="mb-1 uppercase text-slate-500">Sumber Air</Text>
+                  </Flex>
+                  <Flex direction={"column"} gap={"3"}>
+                    <Heading size="2" weight="medium" className="mb-1 capitalize">Sumber Air</Heading>
+
                     <Controller name="water" control={control} render={({ field }) => (
                       <Select.Root value={field.value} onValueChange={field.onChange}>
                         <Select.Trigger className="w-full" />
@@ -210,37 +220,40 @@ export default function BuyerRequestForm() {
                         </Select.Content>
                       </Select.Root>
                     )} />
-                  </Box>
+                  </Flex>
                 </Grid>
                 <Flex direction="column" gap="3">
-                  <Text as="label" size="2" className="flex items-center gap-2 text-slate-700">
+                  <Heading size="2" weight={"medium"} className="flex items-center gap-2">
                     <Checkbox {...register("carport")} /> Tersedia Carport
-                  </Text>
+                  </Heading>
                   {hasCarport && <TextField.Root placeholder="Kapasitas Kendaraan (Mobil)" size="2" {...register("carport_count")} className="ml-6" />}
                 </Flex>
               </Tabs.Content>
 
               {/* TAB: ENVIRONMENT */}
               <Tabs.Content value="environment">
-                <Text size="2" weight="bold" className="mb-6 text-slate-800">Fasilitas & Lingkungan:</Text>
-                <Grid columns={{md: "2"}} gapX="4" gapY="4">
-                  {[
-                    { id: "security", label: "Security 24 Jam" },
-                    { id: "one_gate", label: "One Gate System" },
-                    { id: "masjid", label: "Dekat Rumah Ibadah" },
-                    { id: "sekolah", label: "Area Pendidikan" },
-                    { id: "minimart", label: "Minimarket / Pasar" },
-                  ].map((item) => (
-                    <Text key={item.id} as="label" size="2" className="flex items-center gap-2 text-slate-600 cursor-pointer">
-                      <Checkbox {...register(item.id as any)} /> {item.label}
-                    </Text>
-                  ))}
-                </Grid>
+                <Flex direction={"column"} gap={"4"}>
+                  <Heading size="2" weight="medium">Fasilitas & Lingkungan:</Heading>
+
+                  <Grid columns={{md: "2"}} gapX="4" gapY="4">
+                    {[
+                      { id: "security", label: "Security 24 Jam" },
+                      { id: "one_gate", label: "One Gate System" },
+                      { id: "masjid", label: "Dekat Rumah Ibadah" },
+                      { id: "sekolah", label: "Area Pendidikan" },
+                      { id: "minimart", label: "Minimarket / Pasar" },
+                    ].map((item) => (
+                      <Text key={item.id} as="label" size="2" className="flex items-center gap-2 text-slate-600 cursor-pointer">
+                        <Checkbox {...register(item.id as any)} /> {item.label}
+                      </Text>
+                    ))}
+                  </Grid>
+                </Flex>
               </Tabs.Content>
             </Box>
 
             {/* ACTION FOOTER */}
-            <Flex justify="between" className="mt-10 pt-6 border-t border-slate-100">
+            <Flex justify="between" align={"center"} className="mt-10 pt-6 border-t border-slate-100">
               <Button 
                 type="button" variant="ghost" color="gray" 
                 onClick={handlePrev}
@@ -254,8 +267,8 @@ export default function BuyerRequestForm() {
                   Lanjut <HiOutlineChevronRight size={18} />
                 </Button>
               ) : (
-                <Button type="submit" color="green" className="cursor-pointer px-6 shadow-md">
-                  Hubungi Kami <RiSendPlaneFill size={18} />
+                <Button type="submit" color="green" variant="surface">
+                  Hubungi Kami <RiWhatsappFill size={18} />
                 </Button>
               )}
             </Flex>
